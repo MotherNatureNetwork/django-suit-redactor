@@ -81,6 +81,7 @@ var RLANG = {
 	deleted: 'Deleted',
 	anchor: 'Anchor',
 	link_new_tab: 'Open link in new tab',
+        link_nofollow: 'No Follow',
 	underline: 'Underline',
 	alignment: 'Alignment'
 };
@@ -285,6 +286,7 @@ var RLANG = {
 						'<label>URL</label><input type="text" id="redactor_link_url" class="redactor_input"  />' +
 						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_url_text" />' +
 						'<label><input type="checkbox" id="redactor_link_blank"> ' + RLANG.link_new_tab + '</label>' +
+                                                '<label><input type="checkbox" id="redactor_link_nofollow"> ' + RLANG.link_nofollow + '</label>' +
 					'</div>' +
 					'<div class="redactor_tab" id="redactor_tab2" style="display: none;">' +
 						'<label>Email</label><input type="text" id="redactor_link_mailto" class="redactor_input" />' +
@@ -3441,7 +3443,7 @@ var RLANG = {
 		insertLink: function()
 		{
 			var tab_selected = $('#redactor_tab_selected').val();
-			var link = '', text = '', target = '';
+			var link = '', text = '', target = '', nofollow = '';
 
 			if (tab_selected === '1') // url
 			{
@@ -3452,6 +3454,11 @@ var RLANG = {
 				{
 					target = ' target="_blank"';
 				}
+
+                                if ($('#redactor_link_nofollow').attr('checked'))
+                                {
+                                        target = ' rel="nofollow"';
+                                }
 
 				// test url
 				var pattern = '/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
@@ -3475,7 +3482,7 @@ var RLANG = {
 				text = $('#redactor_link_anchor_text').val();
 			}
 
-			this._insertLink('<a href="' + link + '"' + target + '>' +  text + '</a>', $.trim(text), link, target);
+			this._insertLink('<a href="' + link + '"' + target + nofollow + '>' +  text + '</a>', $.trim(text), link, target);
 
 		},
 		_insertLink: function(a, text, link, target)
